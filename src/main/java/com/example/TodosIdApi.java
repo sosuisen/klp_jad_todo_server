@@ -32,29 +32,25 @@ public class TodosIdApi extends HttpServlet {
 		String path = request.getPathInfo();
 		logger.info("PUT: " + path);
 
-		ToDo params;
+		PutResult putResult;				
 		try {
-			params = jsonb.fromJson(new InputStreamReader(request.getInputStream()), ToDo.class);
+			var params = jsonb.fromJson(new InputStreamReader(request.getInputStream()), ToDo.class);
+			var mat = PUT_PATTERN.matcher(path);
+			if (mat.matches()) {
+				var id = Integer.parseInt(mat.group(1));
+				var fieldName = mat.group(2);
+				putResult = switch (fieldName) {
+					case "title" -> manager.putTitle(id, params.title());
+					case "date" -> manager.putDate(id, params.date());
+					case "priority" -> manager.putPriority(id, params.priority());
+					case "completed" -> manager.putCompleted(id, params.completed());
+					default -> new PutResult(null, ToDoManager.NOT_FOUND_ERROR);
+				};
+			} else {
+				putResult = new PutResult(null, ToDoManager.NOT_FOUND_ERROR);
+			}
 		} catch (JsonbException e) {
-			params = null;
-		}
-		PutResult putResult;		
-		var mat = PUT_PATTERN.matcher(path);
-		if (params == null) {
 			putResult = new PutResult(null, ToDoManager.INVALID_JSON_ERROR);
-		} else if (mat.matches()) {
-			var id = Integer.parseInt(mat.group(1));
-			var fieldName = mat.group(2);
-
-			putResult = switch (fieldName) {
-				case "title" -> manager.putTitle(id, params.title());
-				case "date" -> manager.putDate(id, params.date());
-				case "priority" -> manager.putPriority(id, params.priority());
-				case "completed" -> manager.putCompleted(id, params.completed());
-				default -> new PutResult(null, ToDoManager.NOT_FOUND_ERROR);
-			};
-		} else {
-			putResult = new PutResult(null, ToDoManager.NOT_FOUND_ERROR);
 		}
 		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_OK, putResult);
 	}

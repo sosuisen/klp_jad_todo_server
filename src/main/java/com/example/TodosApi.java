@@ -26,19 +26,13 @@ public class TodosApi extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		ToDo params;
+		PostResult postResult = null;				
 		try {
-			params = jsonb.fromJson(request.getInputStream(), ToDo.class);
-		} catch (JsonbException e) {
-			params = null;
-		}		
-		PostResult postResult;
-		if (params == null) {
-			postResult = new PostResult(null, ToDoManager.INVALID_JSON_ERROR);
-		}
-		else {
+			var params = jsonb.fromJson(request.getInputStream(), ToDo.class);
 			postResult = manager.postTodo(params);
-		}
+		} catch (JsonbException e) {
+			postResult = new PostResult(null, ToDoManager.INVALID_JSON_ERROR);
+		}		
 		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_CREATED, postResult);
 	}
 }
