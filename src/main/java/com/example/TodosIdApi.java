@@ -24,8 +24,8 @@ public class TodosIdApi extends HttpServlet {
 	private final Logger logger = Logger.getLogger(TodosIdApi.class.getName());
 
 	// 「/api/todos」より後ろのパスとマッチ
-	private static final Pattern PUT_PATTERN = Pattern.compile("^/(\\d+)/(title|date|priority|completed)$");
-	private static final Pattern DELETE_PATTERN = Pattern.compile("^/(\\d+)$");
+	private final Pattern PUT_PATTERN = Pattern.compile("^/(\\d+)/(title|date|priority|completed)$");
+	private final Pattern DELETE_PATTERN = Pattern.compile("^/(\\d+)$");
 
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

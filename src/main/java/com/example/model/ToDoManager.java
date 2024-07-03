@@ -11,6 +11,7 @@ public class ToDoManager {
 	private final String dbPath = "c:\\pleiades\\2024-03\\workspace\\todo-server\\jad.db";
 	private final DAO dao = new DAO("jdbc:sqlite:" + dbPath);
 	private final Logger logger = Logger.getLogger(ToDoManager.class.getName());
+
 	public static final String NOT_FOUND_ERROR = "Not Found";
 	public static final String INTERNAL_SERVER_ERROR = "Internal Server Error"; 
 	public static final String INVALID_JSON_ERROR = "Invalid JSON";

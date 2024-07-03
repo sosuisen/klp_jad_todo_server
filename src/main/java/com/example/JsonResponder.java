@@ -10,9 +10,9 @@ import jakarta.json.bind.JsonbException;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class JsonResponder {
-	public static Jsonb jsonb = JsonbBuilder.create();
-	
-	private static JsonResponder instance = new JsonResponder();
+	private final Jsonb jsonb = JsonbBuilder.create();
+
+	private static final JsonResponder instance = new JsonResponder();
 	private JsonResponder() {}
 	public static JsonResponder getInstance() {
 		return instance;

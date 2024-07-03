@@ -17,8 +17,8 @@ import com.example.exceptions.RecordNotFoundException;
  * DAO for ToDo App
  */
 public class DAO {
-	private static final Logger logger = Logger.getLogger(DAO.class.getName());
-	private String url;
+	private final Logger logger = Logger.getLogger(DAO.class.getName());
+	private final String url;
 
 	public DAO(String url) {
 		this.url = url;
