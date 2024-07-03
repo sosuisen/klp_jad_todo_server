@@ -17,7 +17,7 @@ public class ToDoManager {
 	public static final String INVALID_JSON_ERROR = "Invalid JSON";
 
 	// 応答用のレコード
-	public static interface Result { public String error(); }
+	public interface Result { public String error(); }
 	public record GetResult(List<ToDo> todos, String error) implements Result {}
 	public record PostResult(ToDo todo, String error) implements Result  {}
 	public record PutResult(ToDo todo, String error) implements Result  {}
