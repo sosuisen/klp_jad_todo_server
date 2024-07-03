@@ -3,6 +3,7 @@ package com.example;
 import java.io.IOException;
 
 import com.example.model.ToDoManager;
+import com.example.model.ToDoManager.Result;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -18,7 +19,7 @@ public class JsonResponder {
 		return instance;
 	}	
 	
-	public void sendJson(HttpServletResponse response, int successCode, ToDoManager.Result result) throws JsonbException, IOException {
+	public void sendJson(HttpServletResponse response, int successCode, Result result) throws JsonbException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
 		response.setStatus(getStatusCode(successCode, result.error()));
