@@ -19,9 +19,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class TodosIdApi extends HttpServlet {
-	private final ToDoManager manager = new ToDoManager();
 	private final Jsonb jsonb = JsonbBuilder.create();
 	private final Logger logger = Logger.getLogger(TodosIdApi.class.getName());
+	private ToDoManager manager;
+
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		var dbPath = getServletContext().getInitParameter("dbPath");
+		manager = ToDoManager.getInstance(dbPath);
+	}
 
 	// 「/api/todos」より後ろのパスとマッチ
 	private final Pattern PUT_PATTERN = Pattern.compile("^/(\\d+)/(title|date|priority|completed)$");
