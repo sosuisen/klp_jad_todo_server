@@ -7,21 +7,36 @@ import java.util.logging.Logger;
 import com.example.exceptions.RecordNotFoundException;
 
 public class ToDoManager {
-	// DBの場所をフルパスで書きます
-	private final String dbPath = "c:\\pleiades\\2024-03\\workspace\\todo-server\\jad.db";
-	private final DAO dao = new DAO("jdbc:sqlite:" + dbPath);
 	private final Logger logger = Logger.getLogger(ToDoManager.class.getName());
+	private final DAO dao;
 
 	public static final String NOT_FOUND_ERROR = "Not Found";
-	public static final String INTERNAL_SERVER_ERROR = "Internal Server Error"; 
+	public static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
 	public static final String INVALID_JSON_ERROR = "Invalid JSON";
 
 	// 応答用のレコード
-	public interface Result { public String error(); }
+	public interface Result {
+		public String error();
+	}
 	public record GetResult(List<ToDo> todos, String error) implements Result {}
-	public record PostResult(ToDo todo, String error) implements Result  {}
-	public record PutResult(ToDo todo, String error) implements Result  {}
+	public record PostResult(ToDo todo, String error) implements Result {}
+	public record PutResult(ToDo todo, String error) implements Result {}
 	public record DeleteResult(int id, String error) implements Result {}
+
+	private ToDoManager(String dbPath) {
+		dao = new DAO("jdbc:sqlite:" + dbPath);
+	}
+
+	private static class SingletonHolder {
+		private static ToDoManager singleton;
+	}
+
+	public static ToDoManager getInstance(String dbPath) {
+		if (SingletonHolder.singleton == null) {
+			SingletonHolder.singleton = new ToDoManager(dbPath);
+		}
+		return SingletonHolder.singleton;
+	}
 
 	public GetResult getTodos() {
 		try {
@@ -46,7 +61,7 @@ public class ToDoManager {
 			return new PostResult(null, INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	public PutResult putTitle(int id, String title) {
 		try {
 			return new PutResult(
@@ -102,7 +117,7 @@ public class ToDoManager {
 			return new PutResult(null, INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	public DeleteResult delete(int id) {
 		try {
 			dao.delete(id);

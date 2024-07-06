@@ -15,8 +15,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class TodosApi extends HttpServlet {
-	private final ToDoManager manager = new ToDoManager();
 	private final Jsonb jsonb = JsonbBuilder.create();
+	private ToDoManager manager;
+
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		var dbPath = getServletContext().getInitParameter("dbPath");
+		manager = ToDoManager.getInstance(dbPath);
+	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -26,13 +33,13 @@ public class TodosApi extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		PostResult postResult = null;				
+		PostResult postResult = null;
 		try {
 			var params = jsonb.fromJson(request.getInputStream(), ToDo.class);
 			postResult = manager.postTodo(params);
 		} catch (JsonbException e) {
 			postResult = new PostResult(null, ToDoManager.INVALID_JSON_ERROR);
-		}		
+		}
 		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_CREATED, postResult);
 	}
 }
