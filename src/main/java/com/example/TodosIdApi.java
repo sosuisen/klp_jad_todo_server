@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import com.example.model.ToDo;
 import com.example.model.ToDoManager;
-import com.example.model.ToDoManager.DeleteResult;
 import com.example.model.ToDoManager.PutResult;
 
 import jakarta.json.bind.Jsonb;
@@ -32,7 +31,6 @@ public class TodosIdApi extends HttpServlet {
 
 	// 「/api/todos」より後ろのパスとマッチ
 	private final Pattern PUT_PATTERN = Pattern.compile("^/(\\d+)/(title|date|priority|completed)$");
-	private final Pattern DELETE_PATTERN = Pattern.compile("^/(\\d+)$");
 
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -54,21 +52,5 @@ public class TodosIdApi extends HttpServlet {
 			putResult = new PutResult(null, ToDoManager.INVALID_JSON_ERROR);
 		}
 		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_OK, putResult);
-	}
-
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String path = request.getPathInfo();
-		logger.info("DELETE: " + path);
-
-		DeleteResult deleteResult;
-		var mat = DELETE_PATTERN.matcher(path);
-		if (mat.matches()) {
-			var id = Integer.parseInt(mat.group(1));
-			deleteResult = manager.delete(id);
-		} else {
-			deleteResult = new DeleteResult(-1, ToDoManager.NOT_FOUND_ERROR);
-		}
-		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_OK, deleteResult);
 	}
 }

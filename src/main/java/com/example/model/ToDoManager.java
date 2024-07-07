@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.example.exceptions.RecordNotFoundException;
-
 public class ToDoManager {
 	private final Logger logger = Logger.getLogger(ToDoManager.class.getName());
 	private final DAO dao;
@@ -21,7 +19,6 @@ public class ToDoManager {
 	public record GetResult(List<ToDo> todos, String error) implements Result {}
 	public record PostResult(ToDo todo, String error) implements Result {}
 	public record PutResult(ToDo todo, String error) implements Result {}
-	public record DeleteResult(int id, String error) implements Result {}
 
 	private ToDoManager(String dbPath) {
 		dao = new DAO("jdbc:sqlite:" + dbPath);
@@ -75,19 +72,6 @@ public class ToDoManager {
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
 			return new PutResult(null, INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	public DeleteResult delete(int id) {
-		try {
-			dao.delete(id);
-			return new DeleteResult(id, null);
-		} catch (RecordNotFoundException e) {
-			logger.warning(e.getMessage());
-			return new DeleteResult(id, NOT_FOUND_ERROR);
-		} catch (Exception e) {
-			logger.severe(e.getMessage());
-			return new DeleteResult(id, INTERNAL_SERVER_ERROR);
 		}
 	}
 }
