@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.example.exceptions.RecordNotFoundException;
-
 public class ToDoManager {
 	private final Logger logger = Logger.getLogger(ToDoManager.class.getName());
 	private final DAO dao;
@@ -20,8 +18,6 @@ public class ToDoManager {
 	}
 	public record GetResult(List<ToDo> todos, String error) implements Result {}
 	public record PostResult(ToDo todo, String error) implements Result {}
-	public record PutResult(ToDo todo, String error) implements Result {}
-	public record DeleteResult(int id, String error) implements Result {}
 
 	private ToDoManager(String dbPath) {
 		dao = new DAO("jdbc:sqlite:" + dbPath);
@@ -59,35 +55,6 @@ public class ToDoManager {
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
 			return new PostResult(null, INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	public PutResult putToDoField(int id, String fieldName, ToDo params) {
-		try {
-			var updatedToDo = switch (fieldName) {
-				case "title" -> dao.updateTitle(id, params.title());
-				case "date" -> dao.updateDate(id, params.date());
-				case "priority" -> dao.updatePriority(id, params.priority());
-				case "completed" -> dao.updateCompleted(id, params.completed());
-				default -> null;
-			};
-			return new PutResult(updatedToDo, null);
-		} catch (Exception e) {
-			logger.severe(e.getMessage());
-			return new PutResult(null, INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	public DeleteResult delete(int id) {
-		try {
-			dao.delete(id);
-			return new DeleteResult(id, null);
-		} catch (RecordNotFoundException e) {
-			logger.warning(e.getMessage());
-			return new DeleteResult(id, NOT_FOUND_ERROR);
-		} catch (Exception e) {
-			logger.severe(e.getMessage());
-			return new DeleteResult(id, INTERNAL_SERVER_ERROR);
 		}
 	}
 }
