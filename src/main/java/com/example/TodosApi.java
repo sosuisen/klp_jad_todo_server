@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.example.model.ToDo;
 import com.example.model.ToDoManager;
+import com.example.model.ToDoManager.DeleteResult;
 import com.example.model.ToDoManager.PostResult;
 
 import jakarta.json.bind.Jsonb;
@@ -41,5 +42,11 @@ public class TodosApi extends HttpServlet {
 			postResult = new PostResult(null, ToDoManager.INVALID_JSON_ERROR);
 		}
 		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_CREATED, postResult);
+	}
+	
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		DeleteResult deleteResult = manager.deleteTodos();
+		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_OK, deleteResult);
 	}
 }

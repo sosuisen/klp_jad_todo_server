@@ -90,4 +90,14 @@ public class ToDoManager {
 			return new DeleteResult(id, INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	public DeleteResult deleteTodos() {
+		try {
+			dao.deleteAll();
+			return new DeleteResult(-1, null);
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+			return new DeleteResult(-1, INTERNAL_SERVER_ERROR);
+		}
+	}
 }
