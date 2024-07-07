@@ -46,13 +46,7 @@ public class TodosIdApi extends HttpServlet {
 			if (mat.matches()) {
 				var id = Integer.parseInt(mat.group(1));
 				var fieldName = mat.group(2);
-				putResult = switch (fieldName) {
-					case "title" -> manager.putTitle(id, params.title());
-					case "date" -> manager.putDate(id, params.date());
-					case "priority" -> manager.putPriority(id, params.priority());
-					case "completed" -> manager.putCompleted(id, params.completed());
-					default -> new PutResult(null, ToDoManager.NOT_FOUND_ERROR);
-				};
+				putResult = manager.putToDoField(id, fieldName, params);
 			} else {
 				putResult = new PutResult(null, ToDoManager.NOT_FOUND_ERROR);
 			}
