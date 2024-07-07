@@ -62,56 +62,16 @@ public class ToDoManager {
 		}
 	}
 
-	public PutResult putTitle(int id, String title) {
+	public PutResult putToDoField(int id, String fieldName, ToDo params) {
 		try {
-			return new PutResult(
-					dao.updateTitle(id, title),
-					null);
-		} catch (RecordNotFoundException e) {
-			logger.warning(e.getMessage());
-			return new PutResult(null, NOT_FOUND_ERROR);
-		} catch (Exception e) {
-			logger.severe(e.getMessage());
-			return new PutResult(null, INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	public PutResult putDate(int id, LocalDate date) {
-		try {
-			return new PutResult(
-					dao.updateDate(id, date),
-					null);
-		} catch (RecordNotFoundException e) {
-			logger.warning(e.getMessage());
-			return new PutResult(null, NOT_FOUND_ERROR);
-		} catch (Exception e) {
-			logger.severe(e.getMessage());
-			return new PutResult(null, INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	public PutResult putPriority(int id, int priority) {
-		try {
-			return new PutResult(
-					dao.updatePriority(id, priority),
-					null);
-		} catch (RecordNotFoundException e) {
-			logger.warning(e.getMessage());
-			return new PutResult(null, NOT_FOUND_ERROR);
-		} catch (Exception e) {
-			logger.severe(e.getMessage());
-			return new PutResult(null, INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	public PutResult putCompleted(int id, boolean completed) {
-		try {
-			return new PutResult(
-					dao.updateCompleted(id, completed),
-					null);
-		} catch (RecordNotFoundException e) {
-			logger.warning(e.getMessage());
-			return new PutResult(null, NOT_FOUND_ERROR);
+			var updatedToDo = switch (fieldName) {
+				case "title" -> dao.updateTitle(id, params.title());
+				case "date" -> dao.updateDate(id, params.date());
+				case "priority" -> dao.updatePriority(id, params.priority());
+				case "completed" -> dao.updateCompleted(id, params.completed());
+				default -> null;
+			};
+			return new PutResult(updatedToDo, null);
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
 			return new PutResult(null, INTERNAL_SERVER_ERROR);
