@@ -27,7 +27,7 @@ public class TodosApi extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		var getResult = manager.getTodos();
+		var getResult = manager.getAll();
 		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_OK, getResult);
 	}
 
@@ -36,7 +36,7 @@ public class TodosApi extends HttpServlet {
 		PostResult postResult = null;
 		try {
 			var params = jsonb.fromJson(request.getInputStream(), ToDo.class);
-			postResult = manager.postTodo(params);
+			postResult = manager.post(params);
 		} catch (JsonbException e) {
 			postResult = new PostResult(null, ToDoManager.INVALID_JSON_ERROR);
 		}
