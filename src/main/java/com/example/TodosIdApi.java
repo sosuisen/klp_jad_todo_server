@@ -44,7 +44,7 @@ public class TodosIdApi extends HttpServlet {
 			if (mat.matches()) {
 				var id = Integer.parseInt(mat.group(1));
 				var fieldName = mat.group(2);
-				putResult = manager.putToDoField(id, fieldName, params);
+				putResult = manager.putField(id, fieldName, params);
 			} else {
 				putResult = new PutResult(null, ToDoManager.NOT_FOUND_ERROR);
 			}
