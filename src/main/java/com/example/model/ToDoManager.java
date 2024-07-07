@@ -71,7 +71,12 @@ public class ToDoManager {
 				default -> null;
 			};
 			return new PutResult(updatedToDo, null);
-		} catch (Exception e) {
+		}
+		catch (RecordNotFoundException e) {
+			logger.warning(e.getMessage());
+			return new PutResult(null, NOT_FOUND_ERROR);
+		}
+		catch (Exception e) {
 			logger.severe(e.getMessage());
 			return new PutResult(null, INTERNAL_SERVER_ERROR);
 		}
