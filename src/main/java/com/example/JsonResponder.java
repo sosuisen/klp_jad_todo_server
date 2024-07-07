@@ -13,11 +13,18 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JsonResponder {
 	private final Jsonb jsonb = JsonbBuilder.create();
 
-	private static final JsonResponder instance = new JsonResponder();
 	private JsonResponder() {}
+
+	private static class SingletonHolder {
+		private static JsonResponder singleton;
+	}
+
 	public static JsonResponder getInstance() {
-		return instance;
-	}	
+		if (SingletonHolder.singleton == null) {
+			SingletonHolder.singleton = new JsonResponder();
+		}
+		return SingletonHolder.singleton;
+	}
 	
 	public void sendJson(HttpServletResponse response, int successCode, Result result) throws JsonbException, IOException {
 		response.setCharacterEncoding("UTF-8");
