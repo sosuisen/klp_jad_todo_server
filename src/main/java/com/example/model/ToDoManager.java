@@ -38,7 +38,7 @@ public class ToDoManager {
 		return SingletonHolder.singleton;
 	}
 
-	public GetResult getTodos() {
+	public GetResult getAll() {
 		try {
 			return new GetResult(dao.getAll(), null);
 		} catch (Exception e) {
@@ -47,7 +47,7 @@ public class ToDoManager {
 		}
 	}
 
-	public PostResult postTodo(ToDo todoParams) {
+	public PostResult post(ToDo todoParams) {
 		try {
 			return new PostResult(
 					dao.create(
@@ -62,7 +62,7 @@ public class ToDoManager {
 		}
 	}
 
-	public PutResult putToDoField(int id, String fieldName, ToDo params) {
+	public PutResult putField(int id, String fieldName, ToDo params) {
 		try {
 			var updatedToDo = switch (fieldName) {
 				case "title" -> dao.updateTitle(id, params.title());
@@ -88,6 +88,16 @@ public class ToDoManager {
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
 			return new DeleteResult(id, INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	public DeleteResult deleteAll() {
+		try {
+			dao.deleteAll();
+			return new DeleteResult(-1, null);
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+			return new DeleteResult(-1, INTERNAL_SERVER_ERROR);
 		}
 	}
 }
