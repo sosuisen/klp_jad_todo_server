@@ -1,6 +1,5 @@
 package com.example.model;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -52,7 +51,7 @@ public class ToDoManager {
 			return new PostResult(
 					dao.create(
 							todoParams.title(),
-							LocalDate.now(),
+							todoParams.date(),
 							todoParams.priority(),
 							todoParams.completed()),
 					null);
