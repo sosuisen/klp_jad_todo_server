@@ -3,6 +3,8 @@ package com.example.model;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.example.exceptions.RecordNotFoundException;
+
 public class ToDoManager {
 	private final Logger logger = Logger.getLogger(ToDoManager.class.getName());
 	private final DAO dao;
@@ -68,7 +70,12 @@ public class ToDoManager {
 				default -> null;
 			};
 			return new PutResult(updatedToDo, null);
-		} catch (Exception e) {
+		}
+		catch (RecordNotFoundException e) {
+			logger.warning(e.getMessage());
+			return new PutResult(null, NOT_FOUND_ERROR);
+		}
+		catch (Exception e) {
 			logger.severe(e.getMessage());
 			return new PutResult(null, INTERNAL_SERVER_ERROR);
 		}
