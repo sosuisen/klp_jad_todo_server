@@ -2,8 +2,8 @@ package com.example;
 
 import java.io.IOException;
 
+import com.example.model.Result;
 import com.example.model.ToDoManager;
-import com.example.model.ToDoManager.Result;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;

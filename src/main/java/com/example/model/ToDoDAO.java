@@ -16,11 +16,11 @@ import com.example.exceptions.RecordNotFoundException;
 /**
  * DAO for ToDo App
  */
-public class DAO {
-	private final Logger logger = Logger.getLogger(DAO.class.getName());
+public class ToDoDAO {
+	private final Logger logger = Logger.getLogger(ToDoDAO.class.getName());
 	private final String url;
 
-	public DAO(String url) {
+	public ToDoDAO(String url) {
 		this.url = url;
 		// DriverManger に org.sqlite.JDBC クラス(JDBCドライバ)を登録する処理		
 		try {

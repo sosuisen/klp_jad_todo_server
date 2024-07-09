@@ -7,23 +7,20 @@ import com.example.exceptions.RecordNotFoundException;
 
 public class ToDoManager {
 	private final Logger logger = Logger.getLogger(ToDoManager.class.getName());
-	private final DAO dao;
+	private final ToDoDAO dao;
 
 	public static final String NOT_FOUND_ERROR = "Not Found";
 	public static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
 	public static final String INVALID_JSON_ERROR = "Invalid JSON";
 
 	// 応答用のレコード
-	public interface Result {
-		public String error();
-	}
 	public record GetResult(List<ToDo> todos, String error) implements Result {}
 	public record PostResult(ToDo todo, String error) implements Result {}
 	public record PutResult(ToDo todo, String error) implements Result {}
 	public record DeleteResult(int id, String error) implements Result {}
 
 	private ToDoManager(String dbPath) {
-		dao = new DAO("jdbc:sqlite:" + dbPath);
+		dao = new ToDoDAO("jdbc:sqlite:" + dbPath);
 	}
 
 	private static class SingletonHolder {
