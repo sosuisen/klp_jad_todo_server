@@ -9,10 +9,6 @@ public class UserManager {
 	private final Logger logger = Logger.getLogger(ToDoManager.class.getName());
 	private final UserDAO dao;
 
-	public static final String NOT_FOUND_ERROR = "Not Found";
-	public static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
-	public static final String INVALID_JSON_ERROR = "Invalid JSON";
-
 	// 応答用のレコード
 	public record PutResult(User todo, String error) implements Result {}
 
@@ -42,7 +38,7 @@ public class UserManager {
 			return new PutResult(updatedUser, null);
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
-			return new PutResult(null, INTERNAL_SERVER_ERROR);
+			return new PutResult(null, HttpErrors.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

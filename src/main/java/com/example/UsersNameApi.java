@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import com.example.model.ToDoManager;
+import com.example.model.HttpErrors;
 import com.example.model.User;
 import com.example.model.UserManager;
 import com.example.model.UserManager.PutResult;
@@ -38,7 +38,10 @@ public class UsersNameApi extends HttpServlet {
 			throws ServletException, IOException {
 		String path = request.getPathInfo();
 		logger.info("PUT: " + path);
-
+		
+		String loginName = request.getRemoteUser();
+		logger.info("loginName: " + loginName);
+		
 		PutResult putResult;
 		try {
 			var params = jsonb.fromJson(new InputStreamReader(request.getInputStream()), User.class);
@@ -46,12 +49,18 @@ public class UsersNameApi extends HttpServlet {
 			if (mat.matches()) {
 				var name = mat.group(1);
 				var fieldName = mat.group(2);
-				putResult = manager.putField(name, fieldName, params);
+				
+				if (request.isUserInRole("USER") && !loginName.equals(name)) {
+					putResult = new PutResult(null, HttpErrors.FORBIDDEN_ERROR);
+				}
+				else {
+					putResult = manager.putField(name, fieldName, params);
+				}
 			} else {
-				putResult = new PutResult(null, ToDoManager.NOT_FOUND_ERROR);
+				putResult = new PutResult(null, HttpErrors.NOT_FOUND_ERROR);
 			}
 		} catch (JsonbException e) {
-			putResult = new PutResult(null, ToDoManager.INVALID_JSON_ERROR);
+			putResult = new PutResult(null, HttpErrors.INVALID_JSON_ERROR);
 		}
 		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_OK, putResult);
 	}

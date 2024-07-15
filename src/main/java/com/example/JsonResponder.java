@@ -2,8 +2,8 @@ package com.example;
 
 import java.io.IOException;
 
+import com.example.model.HttpErrors;
 import com.example.model.Result;
-import com.example.model.ToDoManager;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -37,8 +37,9 @@ public class JsonResponder {
 	private int getStatusCode(int successCode, String error) {
 		return switch (error) {
 			case null -> successCode;
-			case ToDoManager.INVALID_JSON_ERROR -> HttpServletResponse.SC_BAD_REQUEST;
-			case ToDoManager.NOT_FOUND_ERROR -> HttpServletResponse.SC_NOT_FOUND;
+			case HttpErrors.INVALID_JSON_ERROR -> HttpServletResponse.SC_BAD_REQUEST;
+			case HttpErrors.NOT_FOUND_ERROR -> HttpServletResponse.SC_NOT_FOUND;
+			case HttpErrors.FORBIDDEN_ERROR -> HttpServletResponse.SC_FORBIDDEN;
 			default -> HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 		};
 	}
