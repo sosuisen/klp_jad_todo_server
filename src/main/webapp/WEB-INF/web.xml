@@ -31,4 +31,15 @@
 		<url-pattern>/api/todos/*</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<description></description>
+		<display-name>UsersNameApi</display-name>
+		<servlet-name>UsersNameApi</servlet-name>
+		<servlet-class>com.example.UsersNameApi</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UsersNameApi</servlet-name>
+		<url-pattern>/api/users/*</url-pattern>
+	</servlet-mapping>
+
 </web-app>
