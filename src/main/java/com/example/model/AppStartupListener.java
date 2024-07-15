@@ -51,10 +51,8 @@ public class AppStartupListener implements ServletContextListener {
 
 		executeUpdate(
 				url, "CREATE TABLE IF NOT EXISTS user_roles ("
-						+ "user_name TEXT NOT NULL,"
-						+ "role_name TEXT NOT NULL,"
-						+ "PRIMARY KEY (user_name, role_name),"
-						+ "FOREIGN KEY (user_name) REFERENCES users (username))"
+						+ "user_name TEXT NOT NULL PRIMARY KEY,"
+						+ "role_name TEXT NOT NULL)"
 		);
 
 		if (isEmpty(url, "SELECT COUNT(*) cnt FROM todo")) {
