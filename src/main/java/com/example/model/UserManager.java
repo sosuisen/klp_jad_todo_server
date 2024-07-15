@@ -2,9 +2,6 @@ package com.example.model;
 
 import java.util.logging.Logger;
 
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
-
 public class UserManager {
 	private final Logger logger = Logger.getLogger(ToDoManager.class.getName());
 	private final UserDAO dao;
@@ -28,17 +25,6 @@ public class UserManager {
 	}
 
 	public PutResult putField(String userName, String fieldName, User params) {
-		try {
-			Argon2 argon2 = Argon2Factory.create();
-			var hash = argon2.hash(3, 65536, 1, params.password());
-			var updatedUser = switch (fieldName) {
-				case "password" -> dao.updatePassword(userName, hash);
-				default -> null;
-			};
-			return new PutResult(updatedUser, null);
-		} catch (Exception e) {
-			logger.severe(e.getMessage());
-			return new PutResult(null, HttpErrors.INTERNAL_SERVER_ERROR);
-		}
+		return null;
 	}
 }
