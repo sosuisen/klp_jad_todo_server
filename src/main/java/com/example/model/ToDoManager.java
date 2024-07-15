@@ -9,10 +9,6 @@ public class ToDoManager {
 	private final Logger logger = Logger.getLogger(ToDoManager.class.getName());
 	private final ToDoDAO dao;
 
-	public static final String NOT_FOUND_ERROR = "Not Found";
-	public static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
-	public static final String INVALID_JSON_ERROR = "Invalid JSON";
-
 	// 応答用のレコード
 	public record GetResult(List<ToDo> todos, String error) implements Result {}
 
@@ -42,7 +38,7 @@ public class ToDoManager {
 			return new GetResult(dao.getAll(), null);
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
-			return new GetResult(null, INTERNAL_SERVER_ERROR);
+			return new GetResult(null, HttpErrors.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -59,7 +55,7 @@ public class ToDoManager {
 			);
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
-			return new PostResult(null, INTERNAL_SERVER_ERROR);
+			return new PostResult(null, HttpErrors.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -75,7 +71,7 @@ public class ToDoManager {
 			return new PutResult(updatedToDo, null);
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
-			return new PutResult(null, INTERNAL_SERVER_ERROR);
+			return new PutResult(null, HttpErrors.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -85,10 +81,10 @@ public class ToDoManager {
 			return new DeleteResult(id, null);
 		} catch (RecordNotFoundException e) {
 			logger.warning(e.getMessage());
-			return new DeleteResult(id, NOT_FOUND_ERROR);
+			return new DeleteResult(id, HttpErrors.NOT_FOUND_ERROR);
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
-			return new DeleteResult(id, INTERNAL_SERVER_ERROR);
+			return new DeleteResult(id, HttpErrors.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -98,7 +94,7 @@ public class ToDoManager {
 			return new DeleteResult(-1, null);
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
-			return new DeleteResult(-1, INTERNAL_SERVER_ERROR);
+			return new DeleteResult(-1, HttpErrors.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import com.example.model.HttpErrors;
 import com.example.model.ToDo;
 import com.example.model.ToDoManager;
 import com.example.model.ToDoManager.DeleteResult;
@@ -48,10 +49,10 @@ public class TodosIdApi extends HttpServlet {
 				var fieldName = mat.group(2);
 				putResult = manager.putField(id, fieldName, params);
 			} else {
-				putResult = new PutResult(null, ToDoManager.NOT_FOUND_ERROR);
+				putResult = new PutResult(null, HttpErrors.NOT_FOUND_ERROR);
 			}
 		} catch (JsonbException e) {
-			putResult = new PutResult(null, ToDoManager.INVALID_JSON_ERROR);
+			putResult = new PutResult(null, HttpErrors.INVALID_JSON_ERROR);
 		}
 		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_OK, putResult);
 	}
@@ -67,7 +68,7 @@ public class TodosIdApi extends HttpServlet {
 			var id = Integer.parseInt(mat.group(1));
 			deleteResult = manager.delete(id);
 		} else {
-			deleteResult = new DeleteResult(-1, ToDoManager.NOT_FOUND_ERROR);
+			deleteResult = new DeleteResult(-1, HttpErrors.NOT_FOUND_ERROR);
 		}
 		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_OK, deleteResult);
 	}

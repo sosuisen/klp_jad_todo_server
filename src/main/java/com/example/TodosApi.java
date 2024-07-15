@@ -2,6 +2,7 @@ package com.example;
 
 import java.io.IOException;
 
+import com.example.model.HttpErrors;
 import com.example.model.ToDo;
 import com.example.model.ToDoManager;
 import com.example.model.ToDoManager.DeleteResult;
@@ -39,7 +40,7 @@ public class TodosApi extends HttpServlet {
 			var params = jsonb.fromJson(request.getInputStream(), ToDo.class);
 			postResult = manager.post(params);
 		} catch (JsonbException e) {
-			postResult = new PostResult(null, ToDoManager.INVALID_JSON_ERROR);
+			postResult = new PostResult(null, HttpErrors.INVALID_JSON_ERROR);
 		}
 		JsonResponder.getInstance().sendJson(response, HttpServletResponse.SC_CREATED, postResult);
 	}
