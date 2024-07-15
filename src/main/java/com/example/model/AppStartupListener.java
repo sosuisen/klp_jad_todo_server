@@ -51,7 +51,7 @@ public class AppStartupListener implements ServletContextListener {
 
 		executeUpdate(
 				url, "CREATE TABLE IF NOT EXISTS user_roles ("
-						+ "user_name TEXT NOT NULL PRIMARY KEY,"
+						+ "user_name TEXT PRIMARY KEY,"
 						+ "role_name TEXT NOT NULL)"
 		);
 
