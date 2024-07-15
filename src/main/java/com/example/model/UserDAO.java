@@ -30,7 +30,7 @@ public class UserDAO {
 		try (
 				Connection conn = DriverManager.getConnection(url);
 				PreparedStatement pstmt = conn.prepareStatement("SELECT user_name FROM users where user_name=?");
-			) {
+		) {
 			pstmt.setString(1, name);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -39,23 +39,23 @@ public class UserDAO {
 		}
 		return null;
 	}
-    
-    private User updateUserField(String query, String name, Object value) throws SQLException, RecordNotFoundException {
-        try (
-        		Connection conn = DriverManager.getConnection(url);
-        		PreparedStatement pstmt = conn.prepareStatement(query);
-        	) {
-            pstmt.setObject(1, value);
-            pstmt.setString(2, name);
-            int num = pstmt.executeUpdate();
-            if (num <= 0) {
-                throw new RecordNotFoundException("user_name " + name + " does not exist.");
-            }
-        }
-        return getUser(name);
-    }
 
-    public User updatePassword(String user_name, String password) throws SQLException, RecordNotFoundException {
+	private User updateUserField(String query, String name, Object value) throws SQLException, RecordNotFoundException {
+		try (
+				Connection conn = DriverManager.getConnection(url);
+				PreparedStatement pstmt = conn.prepareStatement(query);
+		) {
+			pstmt.setObject(1, value);
+			pstmt.setString(2, name);
+			int num = pstmt.executeUpdate();
+			if (num <= 0) {
+				throw new RecordNotFoundException("user_name " + name + " does not exist.");
+			}
+		}
+		return getUser(name);
+	}
+
+	public User updatePassword(String user_name, String password) throws SQLException, RecordNotFoundException {
 		return updateUserField("UPDATE users SET password=? WHERE user_name=?", user_name, password);
 	}
 }

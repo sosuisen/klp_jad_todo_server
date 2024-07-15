@@ -39,7 +39,7 @@ public class UsersNameApi extends HttpServlet {
 		String path = request.getPathInfo();
 		logger.info("PUT: " + path);
 
-		PutResult putResult;				
+		PutResult putResult;
 		try {
 			var params = jsonb.fromJson(new InputStreamReader(request.getInputStream()), User.class);
 			var mat = PUT_PATTERN.matcher(path);

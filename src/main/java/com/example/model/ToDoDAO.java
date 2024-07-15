@@ -34,7 +34,7 @@ public class ToDoDAO {
 		try (
 				Connection conn = DriverManager.getConnection(url);
 				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM todo where id=?");
-			) {
+		) {
 			pstmt.setInt(1, id);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -55,16 +55,18 @@ public class ToDoDAO {
 		try (
 				Connection conn = DriverManager.getConnection(url);
 				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM todo");
-			) {
+		) {
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				todos.add(new ToDo(
-						rs.getInt("id"),
-						rs.getString("title"),
-						LocalDate.parse(rs.getString("date")),
-						rs.getInt("priority"),
-						rs.getInt("completed") == 1
-				));
+				todos.add(
+						new ToDo(
+								rs.getInt("id"),
+								rs.getString("title"),
+								LocalDate.parse(rs.getString("date")),
+								rs.getInt("priority"),
+								rs.getInt("completed") == 1
+						)
+				);
 			}
 		}
 		return todos;
@@ -75,8 +77,9 @@ public class ToDoDAO {
 				Connection conn = DriverManager.getConnection(url);
 				PreparedStatement pstmt = conn.prepareStatement(
 						"INSERT INTO todo(title, date, priority, completed) VALUES(?, ?, ?, ?)",
-						Statement.RETURN_GENERATED_KEYS);
-			) {
+						Statement.RETURN_GENERATED_KEYS
+				);
+		) {
 			pstmt.setString(1, title);
 			pstmt.setString(2, date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 			pstmt.setInt(3, priority);
@@ -96,52 +99,59 @@ public class ToDoDAO {
 		}
 	}
 
-    private ToDo updateField(String query, int id, Object value) throws SQLException, RecordNotFoundException {
-        try (
-        		Connection conn = DriverManager.getConnection(url);
-        		PreparedStatement pstmt = conn.prepareStatement(query);
-        	) {
-            pstmt.setObject(1, value);
-            pstmt.setInt(2, id);
-            int num = pstmt.executeUpdate();
-            if (num <= 0) {
-                throw new RecordNotFoundException("id " + id + " does not exist.");
-            }
-        }
-        return get(id);
-    }
-    
+	private ToDo updateField(String query, int id, Object value) throws SQLException, RecordNotFoundException {
+		try (
+				Connection conn = DriverManager.getConnection(url);
+				PreparedStatement pstmt = conn.prepareStatement(query);
+		) {
+			pstmt.setObject(1, value);
+			pstmt.setInt(2, id);
+			int num = pstmt.executeUpdate();
+			if (num <= 0) {
+				throw new RecordNotFoundException("id " + id + " does not exist.");
+			}
+		}
+		return get(id);
+	}
+
 	public ToDo updateTitle(int id, String title) throws SQLException, RecordNotFoundException {
 		return updateField("UPDATE todo SET title=? WHERE id=?", id, title);
-    }
+	}
 
-    public ToDo updateDate(int id, LocalDate date) throws SQLException, RecordNotFoundException {
-        return updateField("UPDATE todo SET date=? WHERE id=?", id, date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-    }
+	public ToDo updateDate(int id, LocalDate date) throws SQLException, RecordNotFoundException {
+		return updateField(
+				"UPDATE todo SET date=? WHERE id=?", id,
+				date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+		);
+	}
 
-    public ToDo updateCompleted(int id, boolean completed) throws SQLException, RecordNotFoundException {
-        return updateField("UPDATE todo SET completed=? WHERE id=?", id, completed ? 1 : 0);
-    }
-    
+	public ToDo updateCompleted(int id, boolean completed) throws SQLException, RecordNotFoundException {
+		return updateField("UPDATE todo SET completed=? WHERE id=?", id, completed ? 1 : 0);
+	}
+
 	public ToDo updatePriority(int id, int priority) throws SQLException, RecordNotFoundException {
 		return updateField("UPDATE todo SET priority=? WHERE id=?", id, priority);
 	}
 
-    public void delete(int id) throws SQLException, RecordNotFoundException {
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM todo WHERE id=?")) {
-            pstmt.setInt(1, id);
-            int num = pstmt.executeUpdate();
-            if (num <= 0) {
-                throw new RecordNotFoundException("id " + id + " does not exist.");
-            }
-        }
-    }
-    
-    public void deleteAll() throws SQLException {
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM todo")) {
-            pstmt.executeUpdate();
-        }
-    }
+	public void delete(int id) throws SQLException, RecordNotFoundException {
+		try (
+				Connection conn = DriverManager.getConnection(url);
+				PreparedStatement pstmt = conn.prepareStatement("DELETE FROM todo WHERE id=?");
+		) {
+			pstmt.setInt(1, id);
+			int num = pstmt.executeUpdate();
+			if (num <= 0) {
+				throw new RecordNotFoundException("id " + id + " does not exist.");
+			}
+		}
+	}
+
+	public void deleteAll() throws SQLException {
+		try (
+				Connection conn = DriverManager.getConnection(url);
+				PreparedStatement pstmt = conn.prepareStatement("DELETE FROM todo");
+		) {
+			pstmt.executeUpdate();
+		}
+	}
 }

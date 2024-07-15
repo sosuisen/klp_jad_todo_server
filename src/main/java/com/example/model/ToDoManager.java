@@ -15,8 +15,11 @@ public class ToDoManager {
 
 	// 応答用のレコード
 	public record GetResult(List<ToDo> todos, String error) implements Result {}
+
 	public record PostResult(ToDo todo, String error) implements Result {}
+
 	public record PutResult(ToDo todo, String error) implements Result {}
+
 	public record DeleteResult(int id, String error) implements Result {}
 
 	private ToDoManager(String dbPath) {
@@ -50,8 +53,10 @@ public class ToDoManager {
 							todoParams.title(),
 							todoParams.date(),
 							todoParams.priority(),
-							todoParams.completed()),
-					null);
+							todoParams.completed()
+					),
+					null
+			);
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
 			return new PostResult(null, INTERNAL_SERVER_ERROR);

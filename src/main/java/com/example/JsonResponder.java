@@ -25,14 +25,15 @@ public class JsonResponder {
 		}
 		return SingletonHolder.singleton;
 	}
-	
-	public void sendJson(HttpServletResponse response, int successCode, Result result) throws JsonbException, IOException {
+
+	public void sendJson(HttpServletResponse response, int successCode, Result result)
+			throws JsonbException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
 		response.setStatus(getStatusCode(successCode, result.error()));
 		response.getWriter().write(jsonb.toJson(result));
 	}
-	
+
 	private int getStatusCode(int successCode, String error) {
 		return switch (error) {
 			case null -> successCode;

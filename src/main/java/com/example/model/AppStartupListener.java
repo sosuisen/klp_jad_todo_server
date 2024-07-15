@@ -33,28 +33,37 @@ public class AppStartupListener implements ServletContextListener {
 		String url = "jdbc:sqlite:" + dbPath;
 		logger.log(Level.INFO, "[AppStartupListener] DB Location: " + url);
 
-		executeUpdate(url, "CREATE TABLE IF NOT EXISTS todo ("
-				+ "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-				+ "title TEXT,"
-				+ "date	TEXT,"
-				+ "priority	INTEGER,"
-				+ "completed INTEGER"
-				+ ")");
+		executeUpdate(
+				url, "CREATE TABLE IF NOT EXISTS todo ("
+						+ "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+						+ "title TEXT,"
+						+ "date	TEXT,"
+						+ "priority	INTEGER,"
+						+ "completed INTEGER"
+						+ ")"
+		);
 
-		executeUpdate(url, "CREATE TABLE IF NOT EXISTS users ("
-				+ "user_name TEXT PRIMARY KEY,"
-				+ "password TEXT NOT NULL)");
+		executeUpdate(
+				url, "CREATE TABLE IF NOT EXISTS users ("
+						+ "user_name TEXT PRIMARY KEY,"
+						+ "password TEXT NOT NULL)"
+		);
 
-		executeUpdate(url, "CREATE TABLE IF NOT EXISTS user_roles ("
-				+ "user_name TEXT NOT NULL,"
-				+ "role_name TEXT NOT NULL,"
-				+ "PRIMARY KEY (user_name, role_name),"
-				+ "FOREIGN KEY (user_name) REFERENCES users (username))");
+		executeUpdate(
+				url, "CREATE TABLE IF NOT EXISTS user_roles ("
+						+ "user_name TEXT NOT NULL,"
+						+ "role_name TEXT NOT NULL,"
+						+ "PRIMARY KEY (user_name, role_name),"
+						+ "FOREIGN KEY (user_name) REFERENCES users (username))"
+		);
 
 		if (isEmpty(url, "SELECT COUNT(*) cnt FROM todo")) {
-			executeUpdate(url, "INSERT INTO todo (title, date, priority, completed) VALUES ('The first task', '2024-01-01', 3, 0)");
+			executeUpdate(
+					url,
+					"INSERT INTO todo (title, date, priority, completed) VALUES ('The first task', '2024-01-01', 3, 0)"
+			);
 		}
-		if(isEmpty(url, "SELECT COUNT(*) cnt FROM users")) {
+		if (isEmpty(url, "SELECT COUNT(*) cnt FROM users")) {
 			/**
 			 * 初期ユーザが登録されていなければ登録
 			 * 初期パスワードはすぐに変更すること
@@ -64,16 +73,18 @@ public class AppStartupListener implements ServletContextListener {
 			executeUpdate(url, "INSERT INTO users VALUES ('user', '" + hash + "')");
 			executeUpdate(url, "INSERT INTO users VALUES ('admin', '" + hash + "')");
 		}
-		if(isEmpty(url, "SELECT COUNT(*) cnt FROM user_roles")) {
-			executeUpdate(url, "INSERT INTO user_roles VALUES ('user', 'USER')");			
+		if (isEmpty(url, "SELECT COUNT(*) cnt FROM user_roles")) {
+			executeUpdate(url, "INSERT INTO user_roles VALUES ('user', 'USER')");
 			executeUpdate(url, "INSERT INTO user_roles VALUES ('admin', 'ADMIN')");
 		}
 	}
 
 	private boolean isEmpty(String url, String sql) {
 		int count = -1;
-		try (Connection conn = DriverManager.getConnection(url);
-				PreparedStatement pstmt = conn.prepareStatement(sql);) {
+		try (
+				Connection conn = DriverManager.getConnection(url);
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+		) {
 			ResultSet rs = pstmt.executeQuery();
 			rs.next();
 			count = rs.getInt("cnt");
@@ -88,8 +99,10 @@ public class AppStartupListener implements ServletContextListener {
 	}
 
 	private void executeUpdate(String url, String query) {
-		try (Connection conn = DriverManager.getConnection(url);
-				PreparedStatement statement = conn.prepareStatement(query);) {
+		try (
+				Connection conn = DriverManager.getConnection(url);
+				PreparedStatement statement = conn.prepareStatement(query);
+		) {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage());
