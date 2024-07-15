@@ -39,9 +39,6 @@ public class UsersNameApi extends HttpServlet {
 		String path = request.getPathInfo();
 		logger.info("PUT: " + path);
 		
-		String loginName = request.getRemoteUser();
-		logger.info("loginName: " + loginName);
-		
 		PutResult putResult;
 		try {
 			var params = jsonb.fromJson(new InputStreamReader(request.getInputStream()), User.class);
@@ -49,13 +46,7 @@ public class UsersNameApi extends HttpServlet {
 			if (mat.matches()) {
 				var name = mat.group(1);
 				var fieldName = mat.group(2);
-				
-				if (request.isUserInRole("USER") && !loginName.equals(name)) {
-					putResult = new PutResult(null, HttpErrors.FORBIDDEN_ERROR);
-				}
-				else {
-					putResult = manager.putField(name, fieldName, params);
-				}
+				putResult = manager.putField(name, fieldName, params);
 			} else {
 				putResult = new PutResult(null, HttpErrors.NOT_FOUND_ERROR);
 			}
