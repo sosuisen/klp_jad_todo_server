@@ -10,7 +10,7 @@ public class UserManager {
 	private final UserDAO dao;
 
 	// 応答用のレコード
-	public record PutResult(User todo, String error) implements Result {}
+	public record PutResult(User user, String error) implements Result {}
 
 	private UserManager(String dbPath) {
 		dao = new UserDAO("jdbc:sqlite:" + dbPath);
